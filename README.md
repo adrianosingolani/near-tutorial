@@ -1,10 +1,11 @@
 # near-tutorial
 
-Code for the "Getting started with NEAR development" tutorial.
-Make sure to checkout to the video-start branch if you want to code along with the video.
-The main repository has the final code produced on the video.
+Code for the "Getting started with NEAR smart contract development" tutorial.
+This is the right branch if you want to code along with the video.
+The main branch has the final code produced on the video.
 
-Below are the steps that I used to create the code on the video-start branch. You don't need to do this if you are going to clone the repository:
+Below are the steps that I used to create the code for this branch. 
+You don't need to do this if you are going to clone the repository.
 
 1) create a new directory and switch to it:
 mkdir near-tutorial
