@@ -1,14 +1,14 @@
 Getting started with NEAR smart contract development
 ====================================================
 
-## Description
+### Description
 Code of the "Getting started with NEAR smart contract development" tutorial.
 
 This is the right branch if you want to code along with the video.
 
 The main branch has the final code produced on the video.
 
-## Creating the boilerplate
+### Creating the boilerplate
 Below are the steps that I used to create the code on the video-start branch. You don't need to do this if you are going to clone the repository.
 
 **Create a new directory and switch to it:**
