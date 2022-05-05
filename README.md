@@ -13,8 +13,7 @@ Below are the steps that I used to create the code on the video-start branch. Yo
 
 **Create a new directory and switch to it:**
 ```
-mkdir near-tutorial
-cd near-tutorial
+mkdir near-tutorial && cd near-tutorial
 ```
 
 **Initialize a new project:**
@@ -36,11 +35,7 @@ touch asconfig.json
 
 **Create *`assembly`* folder and the files *`index.ts`*, *`tsconfig.json`* and *`as_types.d.ts`* inside of it:**
 ```
-mkdir assembly
-cd assembly
-touch index.ts
-touch tsconfig.json
-touch as_types.d.ts
+mkdir assembly && cd assembly && touch index.ts tsconfig.json as_types.d.ts
 ```
 
 **In *`as_types.d.ts`*, add the following (yes, with 3 slashes):**
