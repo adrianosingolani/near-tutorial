@@ -2,7 +2,7 @@
 
 Code for the "Getting started with NEAR development" tutorial.
 Make sure to checkout to the video-start branch if you want to code along with the video.
-The main repository has the final code produced on the video.
+This main branch has the final code produced on the video.
 
 Below are the steps that I used to create the code on the video-start branch. You don't need to do this if you are going to clone the repository:
 
