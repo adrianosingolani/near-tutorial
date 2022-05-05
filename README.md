@@ -1,7 +1,7 @@
 Getting started with NEAR smart contract development
 ====================================================
 
-## Description
+### Description
 Code of the "Getting started with NEAR smart contract development" tutorial.
 
 Make sure to checkout to the video-start branch if you want to code along with the video.
