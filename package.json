@@ -1,0 +1,20 @@
+{
+  "name": "near-tutorial",
+  "version": "1.0.0",
+  "description": "Code for the \"Getting started with NEAR smart contracts development\" tutorial.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrianosingolani/near-tutorial.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/adrianosingolani/near-tutorial/issues"
+  },
+  "homepage": "https://github.com/adrianosingolani/near-tutorial#readme"
+}
