@@ -1,0 +1,63 @@
+Hi! The purpose of this tutorial is to get people started with development for the NEAR blockchain. 
+We are going to learn how to create and deploy a simple smart contract and interact with it using the NEAR Command Line Interface.
+
+NEAR supports writting smart contracts in Rust and AssemblyScript. I think AssemblyScript is a good choice for starting out because it's very similar to TypeScript and JavaScript, which are programming languages that many developers out there are comfortable with.
+
+You are going to need a code editor, a command line tool, node.js and npm installed before starting to follow this tutorial.
+Check out the NEAR CLI installation link in the description, specially when using Windows, if you don't know how to install them.
+node -v
+npm -v
+
+First we are going to create a new directory, then switch to it and initialize a new Node.js module using npm:
+mkdir near-tutorial
+cd near-tutorial
+npm init
+
+It's just a tutorial, so I'm going to hit enter for every option to use its default values.
+
+Now we are going to install the AssemblyScript compiler:
+npm install --save-dev assemblyscript
+
+With the compiler installed we are going to use its scaffolding utility to set up a new AssemblyScript project in the current directory:
+npx asinit .
+
+Type Y to continue and it's going to create automatically the recommended directory structure and configuration files.
+
+Now we have a basic AssemblyScript project but for turning it into a smart contract we are going to need the NEAR SDK. So let's install it:
+npm install --save-dev near-sdk-as
+
+For the last, let's install the NEAR Command Line Interface globally so we can access it from anywhere:
+npm install near-cli -g
+
+With everything installed the last thing that we need is to create a NEAR account on the testnet and login with it. 
+Go to https://wallet.testnet.near.org and click on the "Create Account" button.
+Choose an account ID that you like and click the button to continue.
+For the security method, choose Secure Passphrase and continue.
+Click the "Copy" button and paste it in somewhere safe. You are going to need it for the next step and when you need to import it to a NEAR wallet again in the future. If you lose it, you may lose your account.
+Type the asked word and click the "Verify" button to continue.
+You now have a NEAR wallet with some NEAR tokens in the testnet network. It would worth a lot of money if it was in the mainnet, but as the network name suggests, it's only for testing purpose.
+Let's log in with near-cli using our new account:
+near login
+
+That's it! We have everything set to start writing our first smart contract and interacting with it.
+
+Let's open the project that we created early in the code editor. We are only going to edit the index.ts file inside the assembly directory, but let's open the base directory in the code editor to be familiar with the project structure. I'm going to use VS Code, but you can use any editor that you like.
+code .
+
+
+
+
+
+
+
+
+
+
+
+
+
+VIDEO DESCRIPTION:
+
+- NEAR CLI installation: https://docs.near.org/docs/tools/near-cli#installation
+- VS Code editor download: https://code.visualstudio.com/download
+- Create NEAR account: https://wallet.testnet.near.org
