@@ -1,9 +1,9 @@
 import { storage } from 'near-sdk-as';
 
 export function setNumber(number: u8): void {
-  assert(storage.getPrimitive<u8>('number', 0) == 0, "Number is already set. You can set to another one after someone guess it.");
-
   assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
+  assert(storage.getPrimitive<u8>('number', 0) == 0, "Number is already set. You can set to another one after someone guess it.");
 
   storage.set<u8>('number', number);
 }

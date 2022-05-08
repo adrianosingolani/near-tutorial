@@ -1,11 +1,11 @@
 import { storage, context } from 'near-sdk-as';
 
 export function setNumber(number: u8): void {
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
   assert(_getNumber() == 0, "Number is already set. You can set to another one after someone guess it.");
 
   assert(_isOwner(), "Only the contract account can set the number.");
-
-  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
 
   storage.set<u8>('number', number);
 }

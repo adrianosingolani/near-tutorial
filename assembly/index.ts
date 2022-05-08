@@ -3,14 +3,14 @@ import { storage, context, u128 } from 'near-sdk-as';
 const ONE_NEAR = u128.fromString('1000000000000000000000000');
 
 export function setNumber(number: u8): void {
+  // check if number is inside the range. If not, return an error
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
   // number can only be set if it's equal to zero, which means someone guessed it
   assert(_getNumber() == 0, "Number is already set. You can set to another one after someone guess it.");
 
   // return an error if not the owner of the contract 
   assert(_isOwner(), "Only the contract account can set the number.");
-
-  // check if number is inside the range. If not, return an error
-  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
 
   // Since it passed all assert checks, store the number
   storage.set<u8>('number', number);
