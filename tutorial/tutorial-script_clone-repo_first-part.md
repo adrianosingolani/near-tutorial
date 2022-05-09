@@ -12,7 +12,6 @@ npm -v
 ```
 
 In order to make the video shorter, we are going to clone the base project instead of just typing all the boilerplate code. 
-The link for the repository is in the description.
 
 https://github.com/adrianosingolani/near-tutorial
 
@@ -55,7 +54,7 @@ near login
 That's it! We have everything set to start writing our first smart contract and interacting with it.
 
 
-VIDEO DESCRIPTION:
+USEFUL LINKS:
 
 - How to install the Terminal (for Windows), Node and NPM: https://docs.near.org/docs/tools/near-cli#installation
 - VS Code editor download: https://code.visualstudio.com/download

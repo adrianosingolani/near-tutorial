@@ -6,12 +6,25 @@ If it's right, the contract reset the game and the owner will be able to set ano
 Players can also pay a small fee to reveal the number, so they can easily win the game.
 It seems simple but we will be able to learn some basic concepts of AssemblyScript and how smart contracts work on the NEAR blockchain.
 
-// another option:
-We are going to create a smart contract that will work as a guess game. 
-The contract owner will set a number and the players will need to guess what number is. 
-It's very simple but we will learn some basic concepts of AssemblyScript and how smart contracts work on the NEAR blockchain.
+```javascript
+import { storage } from 'near-sdk-as';
 
-// 1.ts
+export function setNumber(number: u8): void {
+  storage.set<u8>('number', number);
+}
+
+export function guessNumber(number: u8): string {
+  const stored = storage.getPrimitive<u8>('number', 0);
+
+  if (stored < number) {
+    return `The number is lower than ${number}.`;
+  } else if (stored > number) {
+    return `The number is higher than ${number}.`;
+  } else {
+    return 'You guessed right!';
+  }
+}
+```
 Basically, the only file that we are going to work on is the index.ts file inside the assembly directory.
 
 We are going to start by creating a couple of functions.
@@ -60,7 +73,7 @@ But before going forward, let's create a script command in the package.json file
 Our contract is deployed and any account on the NEAR testnet can now make requests to it.
 
 There are two ways to do it using the near-cli, one is by using the call command and the other is with the view command. Which one to use depends of the type of function that your are interacting with.
-"View" functions are the ones that doesn't change the state of the blockchain and can not also use some methods of the NEAR core. Check the "NEAR AssemblyScript smart contracts introduction" for more details, the link is in the description.
+"View" functions are the ones that doesn't change the state of the blockchain and can not also use some methods of the NEAR core. Check the [NEAR AssemblyScript smart contracts introduction](https://docs.near.org/docs/develop/contracts/as/intro) for more details.
 The other type of function is called "change". Those are the ones that can do what "view" functions can not.
 In our case setNumber is a "change" function and guessNumber a "view" one. It will change later because guessNumber will also change the state of the blockchain, so for now we can use the view command to make requests.
 But first, let's call the setNumber.
@@ -81,7 +94,33 @@ near view [accountId] guessNumber '{"number": 77}'
 
 Let's do some improvements on our contract.
 
-// 2.ts
+```javascript
+import { storage } from 'near-sdk-as';
+
+export function setNumber(number: u8): void {
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
+  assert(storage.getPrimitive<u8>('number', 0) == 0, "Number is already set. You can set to another one after someone guess it.");
+
+  storage.set<u8>('number', number);
+}
+
+export function guessNumber(number: u8): string {
+  const stored = storage.getPrimitive<u8>('number', 0);
+
+  assert(stored > 0, 'No number stored. Call setNumber first.');
+
+  if (stored < number) {
+    return `The number is lower than ${number}.`;
+  } else if (stored > number) {
+    return `The number is higher than ${number}.`;
+  } else {
+    storage.set<u8>('number', 0);
+    return 'You guessed right!';
+  }
+}
+```
+
 The assert method has too paremeters. The first is a condition that needs to be true to continue. If it's false the contract will throw an error with the message in the second parameter.
 
 Since the default value for the stored number is 0, we will let it out of the range.
@@ -95,7 +134,51 @@ On the guessNumber function, we make sure that someone can play the game only if
 
 If someone win the game, we change the number back to zero and the contract owner will be allowed to set it to a new one. Now it's not a view function anymore because we are changing the state, so you will get an error if you try to use the view command.
 
-// 3.ts
+```javascript
+import { storage, context } from 'near-sdk-as';
+
+export function setNumber(number: u8): void {
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
+  assert(_getNumber() == 0, "Number is already set. You can set to another one after someone guess it.");
+
+  assert(_isOwner(), "Only the contract account can set the number.");
+
+  storage.set<u8>('number', number);
+}
+
+export function guessNumber(number: u8): string {
+  const stored = _getNumber();
+
+  assert(stored > 0, 'No number stored. Call setNumber first.');
+
+  if (stored < number) {
+    return `The number is lower than ${number}.`;
+  } else if (stored > number) {
+    return `The number is higher than ${number}.`;
+  } else {
+    storage.set<u8>('number', 0);
+    return 'You guessed right!';
+  }
+}
+
+function _getNumber(): u8 {
+  return storage.getPrimitive<u8>('number', 0);
+}
+
+function _isOwner(): bool {
+  return context.contractName == context.sender;
+}
+
+// export function whoAmI(): string {
+//   return context.sender;
+// }
+
+// export function contractAccount(): string {
+//   return context.contractName;
+// }
+```
+
 Since we are using the same getPrimitive method twice to get the number stored, let's create a private function that will return the number for us.
 The difference from a private to a public function is very simple: there's no export in the begining. As a private function, only other functions of the contract are allowed to call it.
 
@@ -109,13 +192,65 @@ You won't have a problem by using either the call and view commands for the "con
 
 Let's comment these two functions and keep doing improvements to our contract.
 
-// 4.ts
+```javascript
+import { storage, context, u128 } from 'near-sdk-as';
+
+const ONE_NEAR = u128.fromString('1000000000000000000000000');
+
+export function setNumber(number: u8): void {
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
+  assert(_getNumber() == 0, "Number is already set. You can set to another one after someone guess it.");
+
+  assert(_isOwner(), "Only the contract account can set the number.");
+
+  storage.set<u8>('number', number);
+}
+
+export function guessNumber(number: u8): string {
+  const stored = _getNumber();
+
+  assert(stored > 0, 'No number stored. Call setNumber first.');
+
+  if (stored < number) {
+    return `The number is lower than ${number}.`;
+  } else if (stored > number) {
+    return `The number is higher than ${number}.`;
+  } else {
+    storage.set<u8>('number', 0);
+    return 'You guessed right!';
+  }
+}
+
+function _getNumber(): u8 {
+  return storage.getPrimitive<u8>('number', 0);
+}
+
+function _isOwner(): bool {
+  return context.contractName == context.sender;
+}
+
+// export function attachedDeposit(): u128 {
+//   return context.attachedDeposit;
+// }
+
+// export function whoAmI(): string {
+//   return context.sender;
+// }
+
+// export function contractAccount(): string {
+//   return context.contractName;
+// }
+```
+
+
 We are now going to create another function that players can call and reveal the number by paying a little fee, but first let's see how the NEAR token value is stored.
 It uses an special type called u128 that the AssemblyScript doesn't have but it's provided by the NEAR SDK.
 The attachedDeposit function returns the context.attachedDeposit.
 
-// terminal
-// near call [accountId] attachedDeposit --accountId [accountId] --ammount 1
+```
+near call [accountId] attachedDeposit --accountId [accountId] --ammount 1
+```
 
 By using the "amount" option we can attach NEAR tokens to our call.
 See the big number that was returned? This is how one NEAR token value is stored.
@@ -125,15 +260,75 @@ The fromString method will transform a string in a u128 number.
 
 Let's go back and finish our contract.
 
-// 5.ts
+```javascript
+import { storage, context, u128 } from 'near-sdk-as';
+
+const ONE_NEAR = u128.fromString('1000000000000000000000000');
+
+export function setNumber(number: u8): void {
+  assert(number > 0, 'The number must be higher than 0 and lower than 256.');
+
+  assert(_getNumber() == 0, "Number is already set. You can set to another one after someone guess it.");
+
+  assert(_isOwner(), "Only the contract account can set the number.");
+
+  storage.set<u8>('number', number);
+}
+
+export function guessNumber(number: u8): string {
+  const stored = _getNumber();
+
+  assert(stored > 0, 'No number stored. Call setNumber first.');
+
+  if (stored < number) {
+    return `The number is lower than ${number}.`;
+  } else if (stored > number) {
+    return `The number is higher than ${number}.`;
+  } else {
+    storage.set<u8>('number', 0);
+    return 'You guessed right!';
+  }
+}
+
+function _getNumber(): u8 {
+  return storage.getPrimitive<u8>('number', 0);
+}
+
+function _isOwner(): bool {
+  return context.contractName == context.sender;
+}
+
+// export function attachedDeposit(): u128 {
+//   return context.attachedDeposit;
+// }
+
+// export function whoAmI(): string {
+//   return context.sender;
+// }
+
+// export function contractAccount(): string {
+//   return context.contractName;
+// }
+
+export function revealNumber(): u8 {
+  assert(
+    context.attachedDeposit >= ONE_NEAR || _isOwner(),
+    'At least 1 NEAR attached is needed to set the number.'
+  );
+
+  return _getNumber();
+}
+```
+
+
 Using the assert method we can check if at least one near is attached to the call or if the one who is calling is the owner of the contract. If at least one of these conditions is true, it will return the number to be guessed.
 
 That's it for this video, but I would like to give a challenge to you.
 It would be cool if our contract could show the players who had won the game.
 Would you like to give a try? I will give you some tips to help you complete this challenge:
-Go to the "NEAR AssemblyScript smart contracts introduction" that is linked in the description and look for some information about collections, specially the one called PersistentMap. It's almost like an array, but instead of having a numbered index for each value, it has a key that you can set that refers to a value.
+Go to the [NEAR AssemblyScript smart contracts introduction](https://docs.near.org/docs/develop/contracts/as/intro) and look for some information about collections, specially the one called PersistentMap. It's almost like an array, but instead of having a numbered index for each value, it has a key that you can set that refers to a value.
 You can use it to store the accountId as key and the number that was guessed, or maybe the timestamp, which is a complex subject for blockchains, as value, then make a function that can be viewed to return the list of winners.
-If you are having a hard time to do implement it or want to connect with others interested in NEAR smart contract development, go to the NEAR Discord server or reach out to me on Twitter. The links are in the description.
+If you are having a hard time to do implement it or want to connect with others interested in NEAR smart contract development, go to the [NEAR Discord server](https://discord.gg/urC9Eh3C), my handle there is trpr#0158, or reach out to me on [Twitter](https://twitter.com/AdSingolani).
 
 I hope you liked this video and thanks for watching. 
 See you around. Bye!
