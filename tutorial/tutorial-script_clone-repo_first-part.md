@@ -1,5 +1,7 @@
 Hi! 
+
 The purpose of this tutorial is to get people started with development for the NEAR blockchain. 
+
 We are going to learn how to create and deploy a simple smart contract and interact with it using the NEAR C-L-I.
 
 NEAR supports writting smart contracts in Rust and AssemblyScript. I think AssemblyScript is a good choice for starting out because it's based in TypeScript, a programming language that many developers out there are comfortable with.
@@ -41,6 +43,7 @@ npm install -g near-cli asbuild
 ```
 
 With everything installed the last thing we need is to create a NEAR account on the testnet and log in with it. 
+
 Go to https://wallet.testnet.near.org, click on the "Create Account" button and follow the instructions. It's pretty straightforward.
 
 https://wallet.testnet.near.org
